@@ -42,7 +42,7 @@ switch lower(experiment)
         params.blind_shuffle = true;
 end
 
-params.bouton_close_minimum_intensity_rel2dendrite(2) = 0; 
+params.bouton_close_minimum_intensity_rel2dendrite(2) = 100; 
 
 %
 % e.g.
