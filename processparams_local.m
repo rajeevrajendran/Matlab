@@ -7,7 +7,7 @@ function params = processparams_local(params) % #ok<FNDEF>
 % 2014, Alexander Heimel
 
 % Changes here
-%experiment = ''
+% add experiment variable
 addpath('C:\Software\InVivoTools\General');
 
 %%%%%%%%%%%%%         Mito project           %%%%%%%%%%%%%%
@@ -35,14 +35,21 @@ switch lower(experiment)
         params.blind_fields = {'date','slice','laser','location','comment','mouse'};
         params.blind_shuffle = true;
         params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
-     case '12.34'
+
+end
+
+%%%%%%%%%%%%%         PV bouton project      %%%%%%%%%%%%%%
+%%%%%%%%%%%%%         Rajeev                 %%%%%%%%%%%%%%
+
+switch lower(experiment)
+    case '12.34'
         %params.viewing_default_gamma(1) = 0.9;
         %params.viewing_default_gamma(2) = 0.8;
         params.blind_fields = {'date','slice','laser','location','comment','mouse'};
         params.blind_shuffle = true;
 end
 
-params.bouton_close_minimum_intensity_rel2dendrite(1) = 100; 
+% params.bouton_close_minimum_intensity_rel2dendrite(1) = 100; 
 
 %
 % e.g.
