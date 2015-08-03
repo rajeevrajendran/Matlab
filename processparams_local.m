@@ -21,6 +21,7 @@ switch lower(experiment)
         params.blind_fields = {'date','slice','laser','location','comment','mouse'};
         params.blind_shuffle = true;
         params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
+        params.get_intensities = true;
      case '11.12_ls2'
         % default gamma values for 11.12 (mito quant)
         params.viewing_default_gamma(1) = 0.9;
@@ -28,6 +29,7 @@ switch lower(experiment)
         params.blind_fields = {'date','slice','laser','location','comment','mouse'};
         params.blind_shuffle = true;
         params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
+        params.get_intensities = true;
      case '11.12_ls_axons'
         % default gamma values for 11.12 (mito quant)
         params.viewing_default_gamma(1) = 0.9;
@@ -35,8 +37,33 @@ switch lower(experiment)
         params.blind_fields = {'date','slice','laser','location','comment','mouse'};
         params.blind_shuffle = true;
         params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
+        params.get_intensities = true;
+    case '11.12_lower_50'
+        params.viewing_default_gamma(1) = 0.9;
+        params.viewing_default_gamma(2) = 0.8;
+        params.blind_fields = {'date','slice','laser','location','comment','mouse'};
+        params.blind_shuffle = true;
+        params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
+        params.get_intensities = true;
+    case '11.12_mid_50'
+        params.viewing_default_gamma(1) = 0.9;
+        params.viewing_default_gamma(2) = 0.8;
+        params.blind_fields = {'date','slice','laser','location','comment','mouse'};
+        params.blind_shuffle = true;
+        params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
+        params.get_intensities = true;
+    case '11.12_top_50'
+        params.viewing_default_gamma(1) = 0.9;
+        params.viewing_default_gamma(2) = 0.8;
+        params.blind_fields = {'date','slice','laser','location','comment','mouse'};
+        params.blind_shuffle = true;
+        params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
+        params.get_intensities = true;
 
 end
+
+
+params.tp_rank_only_present = false; % change to true for only_present 'type'
 
 %%%%%%%%%%%%%         PV bouton project      %%%%%%%%%%%%%%
 %%%%%%%%%%%%%         Rajeev                 %%%%%%%%%%%%%%
