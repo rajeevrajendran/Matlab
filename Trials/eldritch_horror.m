@@ -2,7 +2,8 @@
 % 3rd August 2015
 
 function eldritch_horror (n) % n=number of players
-x=randperm(7,1); % select ancient one
+rng('shuffle')
+x=randperm(7,1);% select ancient one
 % x=randperm(8,1); % select ancient one
 y=randperm(20,3*n); % select players
 % y=randperm(24,n); % select players
