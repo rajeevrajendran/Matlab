@@ -22,6 +22,8 @@ switch lower(experiment)
         params.blind_shuffle = true;
         params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
         params.get_intensities = true;
+    case '11.12_rr_all'
+        params.get_intensities = false;
 end
 
 
