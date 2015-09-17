@@ -9,7 +9,7 @@ global testdb
 
 n_shuffles = 20; % for actual figure atleast 100
 %groupname = '11.12 no lesion';
-groupname = '11.12 lesion';
+groupname = '11.12 all';
 
 logmsg('Refine sampling of axons for picking random locations');
 

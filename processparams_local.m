@@ -10,12 +10,25 @@ function params = processparams_local(params) % #ok<FNDEF>
 % add experiment variable
 addpath('C:\Software\InVivoTools\General');
 
-%%%%%%%%%%%%%         Mito project           %%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%         MITO PROJECT           %%%%%%%%%%%%%%
 %%%%%%%%%%%%%         Rajeev                 %%%%%%%%%%%%%%
 % Mito quant unblind ref transform
+% Short term
 switch lower(experiment)
-     case {'11.12_ls','11.12_rr','11.12_ls2','11.12_ls_axons',...
-             '11.12_rr_all','11.12_rr_101','11.12_rr_101_pretty'}
+     case {'11.12_ls','11.12_rr','11.12_ls2','11.12_ls_axons'}
+        % default gamma values for 11.12 (mito quant)
+        params.viewing_default_gamma(1) = 0.9;
+        params.viewing_default_gamma(2) = 0.8;
+        params.blind_fields = {'date','slice','laser','location','comment','mouse'};
+        params.blind_shuffle = true;
+        params.bouton_close_minimum_intensity_rel2dendrite(2) = 0;
+        params.get_intensities = true;
+end
+
+%Long term
+switch lower(experiment)
+     case {'11.12_rr_all','11.12_rr_101','11.12_rr_101_pretty'}
         % default gamma values for 11.12 (mito quant)
         params.viewing_default_gamma(1) = 0.9;
         params.viewing_default_gamma(2) = 0.8;
@@ -26,7 +39,7 @@ switch lower(experiment)
 end
 
 
-params.tp_rank_only_present = false; % change to true for only_present 'type'
+params.tp_rank_only_present = true; % change to true for only_present 'type'
 
 %%%%%%%%%%%%%         PV bouton project      %%%%%%%%%%%%%%
 %%%%%%%%%%%%%         Rajeev                 %%%%%%%%%%%%%%
@@ -39,11 +52,14 @@ switch lower(experiment)
         params.blind_shuffle = true;
 end
 
-if isfield(params,'series_measures')
-    params.series_measures = [params.series_measures, 'persistent'];
-        params.series_measures = [params.series_measures, 'mito_close'];
-        params.series_measures = [params.series_measures, 'bouton_close'];
-
+switch lower(experiment)
+    case {'11.12_rr_101_pretty'}
+        if isfield(params,'series_measures')
+            params.series_measures = [params.series_measures, 'persistent'];
+            params.series_measures = [params.series_measures, 'mito_close'];
+            params.series_measures = [params.series_measures, 'bouton_close'];
+            
+        end
 end
 
 
