@@ -28,7 +28,8 @@ end
 
 %Long term
 switch lower(experiment)
-     case {'11.12_rr_all','11.12_rr_101','11.12_rr_101_pretty'}
+     case {'11.12_rr_all','11.12_rr_101','11.12_rr_101_pretty',...
+             '11.12_rr_101_pretty_ls'}
         % default gamma values for 11.12 (mito quant)
         params.viewing_default_gamma(1) = 0.9;
         params.viewing_default_gamma(2) = 0.8;
@@ -53,7 +54,7 @@ switch lower(experiment)
 end
 
 switch lower(experiment)
-    case {'11.12_rr_101_pretty'}
+    case {'11.12_rr_101_pretty','11.12_rr_101_pretty_ls'}
         if isfield(params,'series_measures')
             params.series_measures = [params.series_measures, 'persistent'];
             params.series_measures = [params.series_measures, 'mito_close'];

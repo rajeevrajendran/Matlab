@@ -1,8 +1,10 @@
-% function remove_NaNs
+function remove_NaNs
 VectG = [];
 for i = 1:2
 G = values_y{1,i}{1,1};
-gg = G(~isnan(G));
-g = sum(gg)/length(gg);
-VectG = [VectG;g];
+entries = G(~isnan(G));
+total=length(entries);
+success = sum(entries);
+VectG = [VectG;success];
+VectG = [VectG;total];
 end;
