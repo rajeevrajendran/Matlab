@@ -1,8 +1,15 @@
 function remove_nans_single
-G = values_y{1,2}{1,1};
-B=[];
-for i=1:length(G)
-    if ~isnan(G(i))
-        B=[B,G(i)];
+Left_bar = values_y{1,2};
+Left=[];
+for i=1:length(Left_bar)
+    if ~isnan(Left_bar(i))
+        Left=[Left,Left_bar(i)];
+    end
+end
+Left_bar = values_y{1,1};
+Left=[];
+for i=1:length(Left_bar)
+    if ~isnan(Left_bar(i))
+        Left=[Left,Left_bar(i)];
     end
 end
