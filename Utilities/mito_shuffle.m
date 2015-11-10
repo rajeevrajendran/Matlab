@@ -111,7 +111,7 @@ distance2mito_org = distance2mito_org(~isnan(distance2mito_org));
 distance2mito_shuf = distance2mito_shuf(~isnan(distance2mito_shuf));
 
 % make figures
-bin_size = 1; % micron
+bin_size = 1.5; % micron
 edges = 0:bin_size:100;
 bin_size_shuf = bin_size; %micron
 edges_shuf = 0:bin_size_shuf:100;
@@ -201,8 +201,10 @@ for i=1:length(ind_axons)
     
     if params.add_puncta_to_axons
     % need to add present bouton and mito's
-    neurites = reshape([celllist.neurite],2,[]);
-    neurites = neurites(1,:);
+    %neurites = reshape([celllist.neurite],2,[]);
+    %neurites = neurites(1,:);
+    neurites = [record.measures(:).linked2neurite];
+    
     ind_on_axon = find(neurites==axon.index & [celllist.present]==1);
     for j=ind_on_axon(:)'
         punctum = celllist(j);
