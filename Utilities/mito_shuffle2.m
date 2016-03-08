@@ -7,7 +7,7 @@ function mito_shuffle
 
 global testdb
 
-n_shuffles = 10;%00;
+n_shuffles = 100;%00;
 if n_shuffles<50
     logmsg('For final publishable result, please increase sample number perhaps to 1000 or so');
 end
@@ -28,12 +28,8 @@ selection = groupdb(ind).filter;
 logmsg(['Group is ' groupname ', selection is ' selection ]);
 ind = find_record(testdb,selection);
 db = testdb(ind);
-distance2mito_org = [];
-distance2mito_shuf = [];
 distance2bouton_org = [];
 distance2bouton_shuf = [];
-
-
 default_params = tpreadconfig( testdb(1) );
 if isempty(default_params)
     default_params.x_step = 0.1973;
@@ -47,8 +43,6 @@ end
 density_bouton = [];
 density_mito = [];
 axon_length = [];
-
-
 for i=1:length(db)
     logmsg(['Record ' num2str(i) ' of ' num2str(length(db))]);
 %     if isempty(db(i).measures) || ...
@@ -59,8 +53,7 @@ for i=1:length(db)
     if axons2d( db(i) )
         continue
     end
-    processparams = tpprocessparams(db(i));
-
+    
     params = tpreadconfig( db(i) );
     if isempty(params)
         params = default_params;
@@ -75,8 +68,7 @@ for i=1:length(db)
     % pulling real data to axons
     % db(i) = pull_mito2axons( db(i), params );
     
-    db(i) = tp_mito_close( db(i),params,processparams);
-    db(i) = tp_bouton_close( db(i),params,processparams);
+    db(i) = tp_bouton_close( db(i),params);
 
     axon = [db(i).measures.axon];
 
@@ -87,62 +79,52 @@ for i=1:length(db)
 
     
     if ~isempty(db(i).measures) && isfield(db(i).measures,'bouton')
-        bouton = [db(i).measures.bouton] & [db(i).measures.present];
-        distance2mito_org = [distance2mito_org [db(i).measures(bouton).distance2mito]];
-
         mito = [db(i).measures.mito] & [db(i).measures.present];
+ %       bouton = [db(i).measures.bouton] & [db(i).measures.present] & ([db(i).measures.distance2neurite]>0.5);
+%        bouton = [db(i).measures.bouton] & [db(i).measures.present] & ([db(i).measures.distance2neurite]<0.5);
+%        bouton = [db(i).measures.bouton] & [db(i).measures.present] & ([db(i).measures.mito_close]);
         distance2bouton_org = [distance2bouton_org [db(i).measures(mito).distance2bouton]];
-        
+
         if params.pull_mito2axons 
             db(i) = pull_mito2axons( db(i), params );
         end
         
         for j=1:n_shuffles
-            shuffled_mitos_record = shuffle_mitos( db(i),'mito');
-            shuffled_mitos_record = tp_mito_close( shuffled_mitos_record,params,processparams );
-            shuffled_boutons_record = shuffle_mitos( db(i),'bouton');
-            shuffled_boutons_record = tp_bouton_close( shuffled_boutons_record,params,processparams  );
-            distance2mito_shuf = [distance2mito_shuf ...
-                [shuffled_mitos_record.measures(bouton).distance2mito] ];
+            shuffled_record = shuffle_boutons_record( db(i));
+            shuffled_record = tp_bouton_close( shuffled_record,params  );
             distance2bouton_shuf = [distance2bouton_shuf ...
-                [shuffled_boutons_record.measures(mito).distance2bouton] ];
+                [shuffled_record.measures(mito).distance2bouton] ];
         end
     end
 end
 
-plotdistances( distance2mito_org,distance2mito_shuf,n_shuffles,groupname,'Distance to mito')
-plotdistances( distance2bouton_org,distance2bouton_shuf,n_shuffles,groupname,'Distance to bouton')
 
 % logmsg('Clipping high shuffle distances');
 % distance2mito_shuf(distance2mito_shuf<20)=NaN;
 % distance2mito_org(distance2mito_org<20)=NaN;
 
+d=reshape(distance2bouton_shuf,n_shuffles,length(distance2bouton_shuf)/n_shuffles);
+mean_mito_org = nanmean(distance2bouton_org);
+means_mito_shu = nanmean(d,2);
 
-function plotdistances( distance2mito_org,distance2mito_shuf,n_shuffles,groupname,xlab)
-
-
-d2mito=reshape(distance2mito_shuf,n_shuffles,length(distance2mito_shuf)/n_shuffles);
-mean_mito_org = nanmean(distance2mito_org);
-means_mito_shu = nanmean(d2mito,2);
-
-distance2mito_org = distance2mito_org(~isnan(distance2mito_org));
-distance2mito_shuf = distance2mito_shuf(~isnan(distance2mito_shuf));
+distance2bouton_org = distance2bouton_org(~isnan(distance2bouton_org));
+distance2bouton_shuf = distance2bouton_shuf(~isnan(distance2bouton_shuf));
 
 % make figures
-bin_size = 2; % micron
+bin_size = 1.5; % micron
 edges = 0:bin_size:100;
 bin_size_shuf = bin_size; %micron
 edges_shuf = 0:bin_size_shuf:100;
 
 plot_per_micron = false;
 
-[n_org]=histc(distance2mito_org,edges);
-n_org = n_org / length(distance2mito_org) ;
-[n_shuf]=histc(distance2mito_shuf,edges_shuf);
-n_shuf = n_shuf / length(distance2mito_shuf) ;
+[n_org]=histc(distance2bouton_org,edges);
+n_org = n_org / length(distance2bouton_org) ;
+[n_shuf]=histc(distance2bouton_shuf,edges_shuf);
+n_shuf = n_shuf / length(distance2bouton_shuf) ;
 
 if plot_per_micron
-    n_org = n_org / bin_size; %#ok<UNRCH>
+    n_org = n_org / bin_size;
     n_shuf = n_shuf / bin_size_shuf;
 end
 
@@ -171,9 +153,9 @@ x_shuf = x_shuf(2:end-1);
 y = flatten([n_shuf;n_shuf]);
 plot(x_shuf,y,'color',color_shu,'linewidth',3);
 
-xlabel([xlab '(um)']);
+xlabel('Distance to bouton (um)');
 if plot_per_micron
-    ylabel('Fraction per um'); %#ok<UNRCH>
+    ylabel('Fraction per um');
 else
     ylabel('Fraction');
 end
@@ -182,13 +164,13 @@ legend boxoff
 xlim([0 30]);
 %x=0:0.1:30;plot(x,0.093*exp(-x/5.3),'g');
 
-save_figure(subst_filechars(['mito_shuffle_' xlab '_' groupname '.png']));
+save_figure(['mito_shuffle_distance2bouton_' groupname '.png']);
 
 % statistics
 
-logmsg(['Original mean ' xlab ' = ' num2str(mean(distance2mito_org),3) ' +- ' num2str(sem(distance2mito_org),3) ' um (SEM), n = ' num2str(length(distance2mito_org))]);
-logmsg(['Shuffled mean ' xlab ' = ' num2str(mean(distance2mito_shuf),3) ' +- ' num2str(sem(distance2mito_shuf),3) ' um (SEM), n = ' num2str(length(distance2mito_shuf))]);
-[h,p] = kstest2(distance2mito_org,distance2mito_shuf); %#ok<ASGLU>
+logmsg(['Original mean distance2bouton = ' num2str(mean(distance2bouton_org),3) ' +- ' num2str(sem(distance2bouton_org),3) ' um (SEM), n = ' num2str(length(distance2bouton_org))]);
+logmsg(['Shuffled mean distance2bouton = ' num2str(mean(distance2bouton_shuf),3) ' +- ' num2str(sem(distance2bouton_shuf),3) ' um (SEM), n = ' num2str(length(distance2bouton_shuf))]);
+[h,p] = kstest2(distance2bouton_org,distance2bouton_shuf); %#ok<ASGLU>
 logmsg(['p = ' num2str(p,3) ', Kolmogorov-Smirnov, but this p value is certainly too low. I would not report it']);
 logmsg(['True mean higher than shuffled mean in ' ...
     num2str(sum(mean_mito_org>means_mito_shu)/length(means_mito_shu)*100) ...
@@ -206,7 +188,7 @@ hold on
 plot([mean_mito_org mean_mito_org],ylim,'color',color_org,'linewidth',2);
 xlabel('Mean distance (um)');
 ylabel('Count');
-save_figure(subst_filechars(['means_mito_shuffle_' xlab '_' groupname '.png']));
+save_figure(['means_mito_shuffle_distance2bouton_' groupname '.png']);
 
 
 
@@ -286,7 +268,7 @@ record.ROIs.celllist = celllist;
 
 
 
-function record = shuffle_mitos( record,roitype)
+function record = shuffle_mitos_record( record)
 debug = false;
 
 if debug
@@ -295,7 +277,7 @@ end
 
 celllist = record.ROIs.celllist;
 ind_axons = find(strncmp('axon',{celllist.type},4));
-ind_mito = find(strncmp(roitype,{celllist.type},4) & [celllist.present]==1);
+ind_mito = find(strncmp('mito',{celllist.type},4) & [celllist.present]==1);
 for i=1:length(ind_axons)
     axon = celllist(ind_axons(i));
     index = axon.index;
