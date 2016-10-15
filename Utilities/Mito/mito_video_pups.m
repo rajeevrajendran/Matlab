@@ -1,9 +1,13 @@
 % Rajeev 2016-04-28
 % Import images from xyzt stack
+Miji
+IJ = ij.IJ;
 
 c0z1 = double(MIJ.getCurrentImage());
 c0z2 = double(MIJ.getCurrentImage());
 c0z3 = double(MIJ.getCurrentImage());
+
+MIJ.createImage(single(c0z2));
 
 % average z
 c0_avg = zeros(256,512,100);
