@@ -9,11 +9,11 @@ IJ = ij.IJ;
 raw =double(MIJ.getCurrentImage());
 x=512;
 y=796;
-t=1499;
+t=599;
 n=5;
 
 mean_image=[];
-for b=0:298
+for b=0:118
     for a=1:n
         image(:,:,a)=raw(:,:,(5*b+a));
     end
