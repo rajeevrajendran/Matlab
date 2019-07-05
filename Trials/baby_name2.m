@@ -2,7 +2,7 @@
 % 3rd August 2015
 % Modified 22 May 2016
 
-function baby_name (x,y) % n=number of letters
+function baby_name (x,y) % x=number of consonants, y=number of vowels
 A=81;
 E=127;
 I=70;
@@ -10,14 +10,14 @@ O=75;
 U=28;
 Y=20;
 
-% B=15;
+B=15;
 C=28;
 D=42;
 F=22;
 G=20;
 H=60;
 J=1;
-% K=8;
+K=8;
 L=40;
 M=24;
 N=67;
@@ -34,9 +34,9 @@ Z=1;
 VOWE={};
 CONS={};
 i=0;
-% for i=1:B
-% CONS{1,i}='B';
-% end
+for i=1:B
+CONS{1,i}='B';
+end
 for i=i+1:i+C
 CONS{1,i}='C';
 end
@@ -55,9 +55,9 @@ end
 for i=i+J
 CONS{1,i}='J';
 end
-% for i=i+1:i+K
-% CONS{1,i}='K';
-% end
+for i=i+1:i+K
+CONS{1,i}='K';
+end
 for i=i+1:i+L
 CONS{1,i}='L';
 end
